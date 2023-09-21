@@ -26,3 +26,6 @@ export 'src/widgets/message/user_avatar.dart';
 export 'src/widgets/message/user_name.dart';
 export 'src/widgets/typing_indicator.dart';
 export 'src/widgets/unread_header.dart';
+export 'src/widgets/state/inherited_chat_theme.dart';
+export 'src/widgets/state/inherited_l10n.dart';
+export 'src/widgets/state/inherited_user.dart';

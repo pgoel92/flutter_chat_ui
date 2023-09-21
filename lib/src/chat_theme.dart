@@ -56,6 +56,8 @@ const secondaryDark = Color(0xff2b2250);
 abstract class ChatTheme {
   /// Creates a new chat theme based on provided colors and text styles.
   const ChatTheme({
+    required this.screen_width_breakpoint,
+    required this.messageBodyTextStyle,
     required this.attachmentButtonIcon,
     required this.attachmentButtonMargin,
     required this.backgroundColor,
@@ -112,6 +114,11 @@ abstract class ChatTheme {
     required this.userNameTextStyle,
   });
 
+  /// Width breakpoint for mobile 
+  final num screen_width_breakpoint;
+  
+  final TextStyle messageBodyTextStyle;
+  
   /// Icon for select attachment button.
   final Widget? attachmentButtonIcon;
 
@@ -298,6 +305,11 @@ class DefaultChatTheme extends ChatTheme {
   /// override only a couple of properties, otherwise create a new class
   /// which extends [ChatTheme].
   const DefaultChatTheme({
+    super.screen_width_breakpoint = 600,
+    super.messageBodyTextStyle = const TextStyle(
+      color: Colors.white70,
+      fontSize: 18
+    ),
     super.attachmentButtonIcon,
     super.attachmentButtonMargin,
     super.backgroundColor = neutral7,
@@ -324,6 +336,7 @@ class DefaultChatTheme extends ChatTheme {
     super.inputBackgroundColor = neutral0,
     super.inputBorderRadius = const BorderRadius.vertical(
       top: Radius.circular(20),
+      bottom: Radius.circular(20)
     ),
     super.inputContainerDecoration,
     super.inputMargin = EdgeInsets.zero,
@@ -336,7 +349,7 @@ class DefaultChatTheme extends ChatTheme {
       isCollapsed: true,
     ),
     super.inputTextStyle = const TextStyle(
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: FontWeight.w500,
       height: 1.5,
     ),
@@ -467,6 +480,12 @@ class DarkChatTheme extends ChatTheme {
   /// override only a couple of properties, otherwise create a new class
   /// which extends [ChatTheme].
   const DarkChatTheme({
+    super.screen_width_breakpoint = 600,
+    super.messageBodyTextStyle = const TextStyle(color: neutral0,
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+      height: 1.5,
+    ),
     super.attachmentButtonIcon,
     super.attachmentButtonMargin,
     super.backgroundColor = dark,

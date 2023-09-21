@@ -110,16 +110,24 @@ class _InputState extends State<Input> {
 
   Widget _inputBuilder() {
     final query = MediaQuery.of(context);
+    final breakpoint = InheritedChatTheme.of(context)
+        .theme
+        .screen_width_breakpoint;
     final buttonPadding = InheritedChatTheme.of(context)
         .theme
         .inputPadding
-        .copyWith(left: 16, right: 16);
+        .copyWith(left: 16, right: 16,
+                  bottom: (query.size.width > breakpoint) ? 20 : 0, top : (query.size.width > breakpoint) ? 20 : 0);
+    final textStyle = InheritedChatTheme.of(context)
+        .theme
+        .inputTextStyle
+        .copyWith(fontSize : (query.size.width > breakpoint) ? 20 : 14, height: (query.size.width > breakpoint) ? 1.5 : 1.0);
     final safeAreaInsets = isMobile
-        ? EdgeInsets.fromLTRB(
-            query.padding.left,
-            0,
-            query.padding.right,
-            query.viewInsets.bottom + query.padding.bottom,
+    ? EdgeInsets.fromLTRB(
+    query.padding.left,
+    0,
+    query.padding.right,
+    query.viewInsets.bottom + query.padding.bottom,
           )
         : EdgeInsets.zero;
     final textPadding = InheritedChatTheme.of(context)
@@ -140,7 +148,12 @@ class _InputState extends State<Input> {
       child: Padding(
         padding: InheritedChatTheme.of(context).theme.inputMargin,
         child: Material(
-          borderRadius: InheritedChatTheme.of(context).theme.inputBorderRadius,
+          borderRadius: InheritedChatTheme.of(context).theme.inputBorderRadius.copyWith(
+            topLeft: (query.size.width > breakpoint) ? Radius.circular(18) : Radius.circular(12),
+            topRight: (query.size.width > breakpoint) ? Radius.circular(18) : Radius.circular(12),
+            bottomLeft: (query.size.width > breakpoint) ? Radius.circular(18) : Radius.circular(12),
+            bottomRight: (query.size.width > breakpoint) ? Radius.circular(18) : Radius.circular(12)
+          ),
           color: InheritedChatTheme.of(context).theme.inputBackgroundColor,
           child: Container(
             decoration:
@@ -171,17 +184,14 @@ class _InputState extends State<Input> {
                           .theme
                           .inputTextDecoration
                           .copyWith(
-                            hintStyle: InheritedChatTheme.of(context)
-                                .theme
-                                .inputTextStyle
-                                .copyWith(
+                            hintStyle: textStyle.copyWith(
                                   color: InheritedChatTheme.of(context)
                                       .theme
                                       .inputTextColor
                                       .withOpacity(0.5),
                                 ),
                             hintText:
-                                InheritedL10n.of(context).l10n.inputPlaceholder,
+                                widget.options.inputPlaceholder ?? '',
                           ),
                       focusNode: _inputFocusNode,
                       keyboardType: widget.options.keyboardType,
@@ -189,10 +199,7 @@ class _InputState extends State<Input> {
                       minLines: 1,
                       onChanged: widget.options.onTextChanged,
                       onTap: widget.options.onTextFieldTap,
-                      style: InheritedChatTheme.of(context)
-                          .theme
-                          .inputTextStyle
-                          .copyWith(
+                      style: textStyle.copyWith(
                             color: InheritedChatTheme.of(context)
                                 .theme
                                 .inputTextColor,
@@ -251,8 +258,9 @@ class InputOptions {
     this.keyboardType = TextInputType.multiline,
     this.onTextChanged,
     this.onTextFieldTap,
-    this.sendButtonVisibilityMode = SendButtonVisibilityMode.editing,
+    this.sendButtonVisibilityMode = SendButtonVisibilityMode.always,
     this.textEditingController,
+    this.inputPlaceholder,
     this.autocorrect = true,
     this.autofocus = false,
     this.enableSuggestions = true,
@@ -283,6 +291,8 @@ class InputOptions {
   /// you can create your own [InputTextFieldController] (imported from this lib)
   /// and pass it here.
   final TextEditingController? textEditingController;
+
+  final String? inputPlaceholder;
 
   /// Controls the [TextInput] autocorrect behavior. Defaults to [true].
   final bool autocorrect;
